@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin
+    environment:
+      PMA_ARBITRARY: 0
+      PMA_HOST: $MARIADB_HOST
+      PMA_PORT: $MARIADB_PORT
+      UPLOAD_LIMIT: 1G
+    ports:
+      - "8080:80"
+    networks:
+      - site
+    restart: always
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.6
+    env_file:
+      - .env
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+      - mariadb_config:/etc/mysql/conf.d
+      - ./mariadb-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - site
+    restart: always
+
+volumes:
+  mariadb_data: {}
+  mariadb_config: {}
+
+networks:
+  site:
+    driver: bridge
+    external: true
