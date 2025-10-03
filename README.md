@@ -39,7 +39,7 @@ MARIADB_PASSWORD="1234"
 ## 2. Launch Database
 
 ```
-cd db
+cd database
 ```
 
 ```
